@@ -3,6 +3,8 @@ import 'package:carma_app/pages/auth/signupPage.dart';
 import 'package:carma_app/pages/home/homePage.dart';
 import 'package:carma_app/pages/notification/notification.dart';
 import 'package:carma_app/pages/notification/notification_body.dart';
+import 'package:carma_app/pages/scanner/scanner.dart';
+import 'package:carma_app/pages/scanner/wear_items.dart';
 import 'package:carma_app/pages/services/add_garage_screen.dart';
 import 'package:carma_app/pages/services/booking_screen.dart';
 import 'package:carma_app/pages/services/first_time_users.dart';
@@ -26,7 +28,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: NotificationBody(),
+      home: WearItemsScreen(),
     );
   }
 }
