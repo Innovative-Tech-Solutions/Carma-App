@@ -12,16 +12,13 @@ class _WearItemsScreenState extends State<WearItemsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: const Text('Benz GLE'),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () {
-            // Add your functionality here
-          },
-        ),
-      ),
+          backgroundColor: Colors.orange,
+          title: const Text('Benz GLE'),
+          centerTitle: true,
+          leading: Image.asset(
+            'assets/images/backbutton.png',
+            color: Colors.white,
+          )),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -54,7 +51,7 @@ class _WearItemsScreenState extends State<WearItemsScreen> {
                     'Battery',
                     'assets/images/brake.png',
                     'Caution',
-                    Colors.yellow,
+                    const Color.fromARGB(255, 254, 200, 1),
                   ),
                   _buildWearItemCard(
                     context,
@@ -75,7 +72,7 @@ class _WearItemsScreenState extends State<WearItemsScreen> {
                     'Gear',
                     'assets/images/headlight.png',
                     'Caution',
-                    Colors.yellow,
+                    const Color.fromARGB(255, 254, 200, 1),
                   ),
                 ],
               ),
@@ -88,47 +85,50 @@ class _WearItemsScreenState extends State<WearItemsScreen> {
 
   Widget _buildWearItemCard(BuildContext context, String title,
       String imagePath, String status, Color statusColor) {
-    return Container(
-      width: 160,
-      height: 220,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20), color: Colors.white),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Image.asset(imagePath,
-              height: 80, width: 80), // Replace with correct image paths
-          const SizedBox(height: 8),
-
-          Container(
-            height: 40,
-            width: 180,
-            decoration: BoxDecoration(
-              color: statusColor,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20),
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Container(
+        width: 160,
+        height: 220,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20), color: Colors.white),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            child: Center(
-              child: Text(
-                status,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+            const SizedBox(height: 8),
+            Image.asset(imagePath,
+                height: 80, width: 80), // Replace with correct image paths
+            const SizedBox(height: 8),
+
+            Container(
+              height: 40,
+              width: 185,
+              decoration: BoxDecoration(
+                color: statusColor,
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  status,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
