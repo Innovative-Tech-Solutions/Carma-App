@@ -165,7 +165,10 @@ class _MechanicSignUpScreenState extends State<MechanicSignUpScreen> {
                 ),
               ),
               const SizedBox(height: 30),
-              const CustomButton(buttonTitle: 'Continue'),
+              CustomButton(
+                buttonTitle: 'Continue',
+                onPressed: () {},
+              ),
             ],
           ),
         ),
