@@ -1,4 +1,4 @@
-import 'package:carma_app/components/custom_button.dart';
+import 'package:carma_app/src/features/components/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
