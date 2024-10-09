@@ -122,15 +122,18 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
   Future<LoginResponse> login(LoginParamsModel loginModel) async {
     try {
       final response = await _dioService.post(
-          endpoint: EndPoints.login,
-          data: {"email": "user@gmail.com", "password": "userpassword"});
+          endpoint: EndPoints.login, data: loginModel.toJson());
 
       if (response != null) {
         final loginResponse = LoginResponse.fromJson(response);
-        final userDetailsFromLogin = loginResponse.user!;
+        AppLogger.log("LoginResponse: $loginResponse", tag: "login");
 
         if (loginResponse.success) {
-          final updatedUserData = _userService.currentUser!.copyWith(
+          final userDetailsFromLogin = loginResponse.user!;
+          AppLogger.log("User details from login: $userDetailsFromLogin",
+              tag: "login");
+
+          final user = UserData(
             id: userDetailsFromLogin.id,
             name: userDetailsFromLogin.name,
             email: userDetailsFromLogin.email,
@@ -143,13 +146,15 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
             updatedAt: DateTime.now(),
           );
 
-          _userService.setCurrentUser(updatedUserData);
+          _userService.setCurrentUser(user);
+          AppLogger.log("User after login: ${_userService.currentUser}");
         }
         return loginResponse;
       }
     } catch (e) {
       AppLogger.logError("Error while loggin in user $e",
           tag: "AuthRemoteDataSourceImpl");
+      return LoginResponse(success: false, message: e.toString());
     }
     return LoginResponse(success: false, user: null, accessToken: null);
   }
