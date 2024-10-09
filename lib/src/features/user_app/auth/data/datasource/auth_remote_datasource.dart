@@ -3,6 +3,7 @@ import 'package:carma_app/src/core/model/user_data.dart';
 import 'package:carma_app/src/core/services/dio_service.dart';
 import 'package:carma_app/src/core/services/user_service.dart';
 import 'package:carma_app/src/core/utils/logger.dart';
+import 'package:carma_app/src/features/user_app/auth/data/model/forgot_password_response.dart';
 import 'package:carma_app/src/features/user_app/auth/data/model/login_params.dart';
 import 'package:carma_app/src/features/user_app/auth/data/model/login_result_model.dart';
 import 'package:carma_app/src/features/user_app/auth/data/model/logout_response.dart';
@@ -16,7 +17,13 @@ abstract interface class AuthRemoteDataSource {
 
   Future<bool> activateUser(String activationToken, String activationCode);
 
-  Future<void> forgotPassword(String email);
+  Future<ForgotPasswordResponse> forgotPassword(String email);
+
+  Future<bool> verifyForgotPassword(String resetToken);
+
+  Future<bool> updatePassword(String oldPassword, String newPassword);
+
+  Future<bool> saveNewPassword(String newPassword);
 
   Future<LogOutResponse> logOut();
 }
@@ -32,7 +39,19 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
         _userService = userService;
 
   @override
-  Future<void> forgotPassword(String email) async {}
+  Future<ForgotPasswordResponse> forgotPassword(String email) async {
+    try {
+      final response =
+          await _dioService.get(endpoint: EndPoints.forgotPassword);
+
+      if (response != null) {
+        final forgotPasswordResponse =
+            ForgotPasswordResponse.fromJson(response);
+        return forgotPasswordResponse;
+      }
+    } catch (e) {}
+    return ForgotPasswordResponse(success: false, message: "", resetToken: "");
+  }
 
   @override
   Future<LogOutResponse> logOut() async {
@@ -53,16 +72,14 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
       SignUpParamsModel signUpForm) async {
     try {
       final response = await _dioService.post(
-          endpoint: EndPoints.register,
-          data: {
-            "name": "Steven Joseph",
-            "email": "user@gmail.com",
-            "password": "userpassword"
-          });
+          endpoint: EndPoints.register, data: signUpForm.toString());
+      AppLogger.log("Response: $response", tag: "registerUser");
 
       if (response != null) {
         final registrationResponse =
             UserRegistrationResponse.fromJson(response);
+        AppLogger.log("UserRegistrationResponse: $registrationResponse",
+            tag: "registerUser");
 
         if (registrationResponse.success) {
           final userData = UserData(
@@ -77,6 +94,8 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
           );
 
           _userService.setCurrentUser(updatedUserData);
+          AppLogger.log("User after registration: ${_userService.currentUser}",
+              tag: "registerUser");
         }
         return registrationResponse;
       }
@@ -142,6 +161,38 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
       AppLogger.logError("Error while loggin in user $e",
           tag: "AuthRemoteDataSourceImpl");
     }
+    return false;
+  }
+
+  @override
+  Future<bool> updatePassword(String oldPassword, String newPassword) {
+    // TODO: implement updatePassword
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> verifyForgotPassword(String resetToken) async {
+    try {
+      final response =
+          await _dioService.get(endpoint: EndPoints.verifyForgotPassword);
+
+      if (response != null) {
+        return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  @override
+  Future<bool> saveNewPassword(String newPassword) async {
+    try {
+      final response =
+          await _dioService.get(endpoint: EndPoints.saveNewPassword);
+
+      if (response != null) {
+        return true;
+      }
+    } catch (e) {}
     return false;
   }
 

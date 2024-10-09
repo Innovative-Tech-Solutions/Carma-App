@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'subscription.dart';
 
 class UserData {
@@ -95,5 +96,10 @@ class UserData {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
+  }
+
+  @override
+  String toString() {
+    return 'UserData(id: $id, name: $name, email: $email, password: $password, role: $role, isVerified: $isVerified, isOnline: $isOnline, courses: $courses, subscription: $subscription, activationToken: $activationToken, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 }

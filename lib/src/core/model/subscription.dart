@@ -20,4 +20,7 @@ class Subscription {
       'priceId': priceId,
     };
   }
+
+  @override
+  String toString() => 'Subscription(productId: $productId, priceId: $priceId)';
 }

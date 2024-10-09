@@ -1,3 +1,4 @@
+import 'package:carma_app/src/app/app_setup.router.dart';
 import 'package:carma_app/src/core/utils/service_locator.dart';
 import 'package:carma_app/src/features/mechanic_app/mechanic_auth/mechanic_Signup.dart';
 import 'package:carma_app/src/features/mechanic_app/mechanic_auth/mechanic_work_experience.dart';
@@ -11,7 +12,7 @@ import 'package:carma_app/src/features/user_app/auth/presentation/login/loginPag
 import 'package:carma_app/src/features/user_app/auth/presentation/sign_up/signupPage.dart';
 import 'package:carma_app/src/features/user_app/chat/chat.dart';
 import 'package:carma_app/src/features/user_app/chat/chat_view.dart';
-import 'package:carma_app/src/features/user_app/home/homePage.dart';
+import 'package:carma_app/src/features/user_app/home/presentation/home/homePage.dart';
 import 'package:carma_app/src/features/user_app/notification/notification.dart';
 import 'package:carma_app/src/features/user_app/notification/notification_body.dart';
 import 'package:carma_app/src/features/user_app/scanner/scanner.dart';
@@ -28,6 +29,7 @@ import 'package:carma_app/src/features/user_app/services/serviceScreen.dart';
 import 'package:carma_app/src/features/user_app/services/user_booking_history_screen.dart';
 import 'package:carma_app/src/features/user_app/user/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 void main() async {
   setupLocator();
@@ -42,7 +44,23 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SignUpPage(),
+      navigatorKey: StackedService.navigatorKey,
+      onGenerateRoute: StackedRouter().onGenerateRoute,
+      // home: SignUpPage(),
+      builder: (context, child) {
+        final mediaQueryData = MediaQuery.of(context);
+        final scale = mediaQueryData.textScaler.clamp(
+          minScaleFactor: 0.85,
+          maxScaleFactor: .99,
+        );
+        final pixelRatio = mediaQueryData.devicePixelRatio.clamp(1.0, 4.0);
+        return MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: scale,
+              devicePixelRatio: pixelRatio,
+            ),
+            child: child!);
+      },
     );
   }
 }

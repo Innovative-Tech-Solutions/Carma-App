@@ -1,9 +1,12 @@
 import 'package:carma_app/src/core/model/user_data.dart';
 import 'package:carma_app/src/core/services/user_service.dart';
 import 'package:carma_app/src/core/utils/enhanced_base_view_model.dart';
+import 'package:carma_app/src/core/utils/logger.dart';
 import 'package:carma_app/src/features/user_app/auth/data/model/sign_up_params.dart';
 import 'package:carma_app/src/features/user_app/auth/domain/repository/auth_repo.dart';
 import 'package:flutter/material.dart';
+
+import '../../domain/entity/auth_result_entity.dart';
 
 class SignUpViewModel extends EnhancedBaseViewModel {
   final AuthRepository _authRepository;
@@ -29,9 +32,10 @@ class SignUpViewModel extends EnhancedBaseViewModel {
       password: passwordCtr.text,
     );
 
-    final result = await runEitherFuture(
+    final UserRegistrationEntity? result = await runEitherFuture(
       _authRepository.register(signUpParams),
     );
+    AppLogger.log("Result: $result", tag: "SignUpViewModel.registerUser");
 
     return result != null;
   }
