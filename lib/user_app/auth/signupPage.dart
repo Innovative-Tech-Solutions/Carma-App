@@ -43,24 +43,26 @@ class _SignUpPageState extends State<SignUpPage> {
         });
 
         if (response['success'] == true) {
-          // Show success message
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(response['message'])),
+            SnackBar(
+                content:
+                    Text(response['message'] ?? 'Registration successful')),
           );
 
           // Navigate to login screen
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const LoginPage()),
+            MaterialPageRoute(builder: (context) => LoginPage()),
           );
         } else {
           setState(() {
-            _errorMessage = 'Registration failed. Please try again.';
+            _errorMessage =
+                response['message'] ?? 'Registration failed. Please try again.';
           });
         }
       } catch (e) {
         setState(() {
           _isLoading = false;
-          _errorMessage = 'An error occurred. Please try again later.';
+          _errorMessage = e.toString();
         });
       }
     }
