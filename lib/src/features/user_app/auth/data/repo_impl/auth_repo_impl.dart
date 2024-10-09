@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:carma_app/src/core/errors/failure.dart';
 import 'package:carma_app/src/core/utils/base_repo_impl.dart';
 import 'package:carma_app/src/features/user_app/auth/data/datasource/auth_remote_datasource.dart';
+import 'package:carma_app/src/features/user_app/auth/data/model/activation_response.dart';
 import 'package:carma_app/src/features/user_app/auth/data/model/sign_up_params.dart';
 import 'package:carma_app/src/features/user_app/auth/data/model/signup_result_model.dart';
 import 'package:carma_app/src/features/user_app/auth/domain/entity/auth_result_entity.dart';
@@ -37,5 +40,12 @@ class AuthRepoImpl extends AuthRepository with RepositoryErrorHandler {
   @override
   Future<Either<Failure, void>> logout() async {
     return callAction(() => _authDataSource.logOut());
+  }
+
+  @override
+  Future<Either<Failure, ActivationResponse>> activateUser(
+      String activationToken, String activationCode) async {
+    return callAction(
+        () => _authDataSource.activateUser(activationToken, activationCode));
   }
 }

@@ -1,5 +1,7 @@
 import 'package:carma_app/src/app/app_setup.router.dart';
 import 'package:carma_app/src/core/utils/service_locator.dart';
+import 'package:carma_app/src/core/utils/session_manager.dart';
+import 'package:carma_app/src/core/utils/setup_dialog.dart';
 import 'package:carma_app/src/features/mechanic_app/mechanic_auth/mechanic_Signup.dart';
 import 'package:carma_app/src/features/mechanic_app/mechanic_auth/mechanic_work_experience.dart';
 import 'package:carma_app/src/features/mechanic_app/mechanic_home/mechanic_home_screen.dart';
@@ -29,10 +31,14 @@ import 'package:carma_app/src/features/user_app/services/serviceScreen.dart';
 import 'package:carma_app/src/features/user_app/services/user_booking_history_screen.dart';
 import 'package:carma_app/src/features/user_app/user/profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 void main() async {
   setupLocator();
+  setupDialogUi();
+  await Hive.initFlutter();
+  await Hive.openBox(localCacheBox);
   runApp(const MyApp());
 }
 

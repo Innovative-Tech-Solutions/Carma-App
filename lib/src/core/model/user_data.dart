@@ -31,26 +31,36 @@ class UserData {
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) {
-    return UserData(
-      id: json['_id'] as String?,
-      name: json['name'] as String,
-      email: json['email'] as String,
-      password: json['password'] as String?,
-      role: json['role'] as String,
-      activationToken: json['activationToken'] as String?,
-      isVerified: json['isVerified'] as bool? ?? false,
-      isOnline: json['isOnline'] as bool? ?? false,
-      courses: List<dynamic>.from(json['courses'] as List),
-      subscription: json['subscription'] != null
-          ? Subscription.fromJson(json['subscription'])
-          : null,
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'] as String)
-          : null,
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'] as String)
-          : null,
-    );
+    try {
+      return UserData(
+        id: json['_id'] as String?,
+        name: json['name'] as String? ?? '',
+        email: json['email'] as String? ?? '',
+        password: json['password'] as String?,
+        role: json['role'] as String?,
+        activationToken: json['activationToken'] as String?,
+        isVerified: json['isVerified'] as bool? ?? false,
+        isOnline: json['isOnline'] as bool? ?? false,
+        courses: json['courses'] != null
+            ? List<dynamic>.from(json['courses'] as List)
+            : [],
+        subscription: json['subscription'] != null
+            ? Subscription.fromJson(
+                json['subscription'] as Map<String, dynamic>)
+            : null,
+        createdAt: json['createdAt'] != null
+            ? DateTime.parse(json['createdAt'] as String)
+            : null,
+        updatedAt: json['updatedAt'] != null
+            ? DateTime.parse(json['updatedAt'] as String)
+            : null,
+      );
+    } catch (e) {
+      return UserData(
+        name: '',
+        email: '',
+      );
+    }
   }
 
   Map<String, dynamic> toJson() => {

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class SignUpParamsModel {
   final String name;
   final String password;
@@ -26,4 +24,8 @@ class SignUpParamsModel {
       email: map['email'] as String,
     );
   }
+
+  @override
+  String toString() =>
+      'SignUpParamsModel(name: $name, password: $password, email: $email)';
 }

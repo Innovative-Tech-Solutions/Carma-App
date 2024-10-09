@@ -3,6 +3,7 @@ import 'package:carma_app/src/core/model/user_data.dart';
 import 'package:carma_app/src/core/services/dio_service.dart';
 import 'package:carma_app/src/core/services/user_service.dart';
 import 'package:carma_app/src/core/utils/logger.dart';
+import 'package:carma_app/src/features/user_app/auth/data/model/activation_response.dart';
 import 'package:carma_app/src/features/user_app/auth/data/model/forgot_password_response.dart';
 import 'package:carma_app/src/features/user_app/auth/data/model/login_params.dart';
 import 'package:carma_app/src/features/user_app/auth/data/model/login_result_model.dart';
@@ -15,7 +16,8 @@ abstract interface class AuthRemoteDataSource {
 
   Future<UserRegistrationResponse> registerUser(SignUpParamsModel signUpForm);
 
-  Future<bool> activateUser(String activationToken, String activationCode);
+  Future<ActivationResponse> activateUser(
+      String activationToken, String activationCode);
 
   Future<ForgotPasswordResponse> forgotPassword(String email);
 
@@ -70,9 +72,12 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
   @override
   Future<UserRegistrationResponse> registerUser(
       SignUpParamsModel signUpForm) async {
+    AppLogger.log("Sign up form: $signUpForm", tag: "registerUser");
     try {
       final response = await _dioService.post(
-          endpoint: EndPoints.register, data: signUpForm.toString());
+        endpoint: EndPoints.register,
+        data: signUpForm.toJson(),
+      );
       AppLogger.log("Response: $response", tag: "registerUser");
 
       if (response != null) {
@@ -85,15 +90,12 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
           final userData = UserData(
             name: signUpForm.name,
             email: signUpForm.email,
-          );
-
-          final updatedUserData = userData.copyWith(
             activationToken: registrationResponse.activationToken,
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
           );
 
-          _userService.setCurrentUser(updatedUserData);
+          await _userService.setCurrentUser(userData);
           AppLogger.log("User after registration: ${_userService.currentUser}",
               tag: "registerUser");
         }
@@ -102,9 +104,18 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
     } catch (e) {
       AppLogger.logError("Error while registering user $e",
           tag: "AuthRemoteDataSourceImpl");
+      return UserRegistrationResponse(
+        success: false,
+        message: e.toString(),
+        activationToken: "",
+      );
     }
+
     return UserRegistrationResponse(
-        success: false, message: "Could not register", activationToken: "");
+      success: false,
+      message: "Unexpected error occurred",
+      activationToken: "",
+    );
   }
 
   @override
@@ -144,7 +155,7 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
   }
 
   @override
-  Future<bool> activateUser(
+  Future<ActivationResponse> activateUser(
       String activationToken, String activationCode) async {
     try {
       final response = await _dioService.post(
@@ -155,13 +166,15 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
           });
 
       if (response != null) {
-        return true;
+        final activationResponse = ActivationResponse.fromJson(response);
+
+        return activationResponse;
       }
     } catch (e) {
       AppLogger.logError("Error while loggin in user $e",
           tag: "AuthRemoteDataSourceImpl");
     }
-    return false;
+    return ActivationResponse(success: false);
   }
 
   @override
@@ -195,46 +208,4 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
     } catch (e) {}
     return false;
   }
-
-  // Future<void> _saveUser({
-  //   required User user,
-  //   SignUpParamsModel? params,
-  //   bool isEmailAuth = true,
-  // }) async {
-  //   _firebaseHelper.userCollectionRef().doc(user.uid).set({
-  //     'user_id': user.uid,
-  //     'email': user.email,
-  //     'fullname': params?.fullName ?? user.displayName,
-  //     'createdAt': _firebaseHelper.timestamp,
-  //     'auth_type': isEmailAuth,
-  //   });
-  // }
-
-  // @override
-  // Future<AuthResultModel> signInWithGoogle() async {
-  //   final GoogleSignInAccount? user = await _googleSignIn.signIn();
-
-  //   if (user == null) {
-  //     throw const NoGoogleAccountChosenException();
-  //   }
-  //   final GoogleSignInAuthentication googleAuth = await user.authentication;
-
-  //   final OAuthCredential credential = GoogleAuthProvider.credential(
-  //     accessToken: googleAuth.accessToken,
-  //     idToken: googleAuth.idToken,
-  //   );
-
-  //   final UserCredential userDetailsResponse =
-  //       await FirebaseAuth.instance.signInWithCredential(credential);
-
-  //   await _saveUser(
-  //     user: userDetailsResponse.user!,
-  //     isEmailAuth: false,
-  //   );
-
-  //   return const AuthResultModel(
-  //     message: 'Google sign in successful!',
-  //     success: true,
-  //   );
-  // }
 }

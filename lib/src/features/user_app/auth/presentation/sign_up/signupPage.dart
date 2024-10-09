@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class SignUpPage extends StatelessWidget {
   SignUpPage({super.key});
@@ -20,7 +21,9 @@ class SignUpPage extends StatelessWidget {
     return ViewModelBuilder<SignUpViewModel>.reactive(
       viewModelBuilder: () => SignUpViewModel(
           authRepository: locator<AuthRepository>(),
-          userService: locator<UserService>()),
+          userService: locator<UserService>(),
+          navigationService: locator<NavigationService>(),
+          dialogService: locator<DialogService>()),
       builder: (context, viewModel, _) => Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 243, 148, 30),

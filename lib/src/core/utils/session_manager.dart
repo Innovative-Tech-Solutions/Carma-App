@@ -36,12 +36,24 @@ class SessionManager {
     String key,
     T Function(Map<String, dynamic> json) fromJson,
   ) {
-    final jsonString = _localCache.get(key);
-    if (jsonString != null && jsonString.isNotEmpty) {
-      final json = jsonDecode(jsonString) as Map<String, dynamic>;
-      return fromJson(json);
+    try {
+      final dynamic storedValue = _localCache.get(key);
+      if (storedValue == null) return null;
+
+      if (storedValue is String && storedValue.isNotEmpty) {
+        final Map<String, dynamic> json =
+            jsonDecode(storedValue) as Map<String, dynamic>;
+        return fromJson(json);
+      }
+
+      return null;
+    } catch (e) {
+      AppLogger.logError(
+        "Error getting cached object: $e",
+        tag: "SessionManager",
+      );
+      return null;
     }
-    return null;
   }
 
   Future<void> storeObjectList<T>(

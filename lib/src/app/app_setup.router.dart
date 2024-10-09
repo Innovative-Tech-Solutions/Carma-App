@@ -7,15 +7,22 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:carma_app/src/features/user_app/auth/presentation/sign_up/signupPage.dart'
     as _i2;
-import 'package:flutter/material.dart' as _i3;
+import 'package:carma_app/src/features/user_app/home/presentation/home/homePage.dart'
+    as _i3;
+import 'package:flutter/material.dart' as _i4;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i4;
+import 'package:stacked_services/stacked_services.dart' as _i5;
 
 class Routes {
   static const signUpPage = '/';
 
-  static const all = <String>{signUpPage};
+  static const homePage = '/home-page';
+
+  static const all = <String>{
+    signUpPage,
+    homePage,
+  };
 }
 
 class StackedRouter extends _i1.RouterBase {
@@ -23,7 +30,11 @@ class StackedRouter extends _i1.RouterBase {
     _i1.RouteDef(
       Routes.signUpPage,
       page: _i2.SignUpPage,
-    )
+    ),
+    _i1.RouteDef(
+      Routes.homePage,
+      page: _i3.HomePage,
+    ),
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
@@ -35,7 +46,13 @@ class StackedRouter extends _i1.RouterBase {
         builder: (context) => _i2.SignUpPage(key: args.key),
         settings: data,
       );
-    }
+    },
+    _i3.HomePage: (data) {
+      return _i1.buildAdaptivePageRoute<dynamic>(
+        builder: (context) => const _i3.HomePage(),
+        settings: data,
+      );
+    },
   };
 
   @override
@@ -48,7 +65,7 @@ class StackedRouter extends _i1.RouterBase {
 class SignUpPageArguments {
   const SignUpPageArguments({this.key});
 
-  final _i3.Key? key;
+  final _i4.Key? key;
 
   @override
   String toString() {
@@ -67,9 +84,9 @@ class SignUpPageArguments {
   }
 }
 
-extension NavigatorStateExtension on _i4.NavigationService {
+extension NavigatorStateExtension on _i5.NavigationService {
   Future<dynamic> navigateToSignUpPage({
-    _i3.Key? key,
+    _i4.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -84,8 +101,22 @@ extension NavigatorStateExtension on _i4.NavigationService {
         transition: transition);
   }
 
+  Future<dynamic> navigateToHomePage([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.homePage,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
   Future<dynamic> replaceWithSignUpPage({
-    _i3.Key? key,
+    _i4.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -94,6 +125,20 @@ extension NavigatorStateExtension on _i4.NavigationService {
   }) async {
     return replaceWith<dynamic>(Routes.signUpPage,
         arguments: SignUpPageArguments(key: key),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithHomePage([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.homePage,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

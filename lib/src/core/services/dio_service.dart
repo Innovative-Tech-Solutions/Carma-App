@@ -57,8 +57,7 @@ class DioService with ListenableServiceMixin {
       );
       return response.data as T;
     } on DioException catch (e) {
-      _handleError(e);
-      return null;
+      throw _handleError(e); // Changed to throw instead of just handling
     }
   }
 
@@ -106,20 +105,29 @@ class DioService with ListenableServiceMixin {
     }
   }
 
-  void _handleError(DioException error) {
+  String _handleError(DioException error) {
+    if (error.type == DioExceptionType.badResponse) {
+      if (error.response?.data is Map<String, dynamic>) {
+        final errorData = error.response?.data as Map<String, dynamic>;
+        if (errorData.containsKey('message')) {
+          return errorData['message'];
+        }
+      }
+    }
+
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
-        throw 'Connection timeout';
+        return 'Connection timeout';
       case DioExceptionType.sendTimeout:
-        throw 'Send timeout';
+        return 'Send timeout';
       case DioExceptionType.receiveTimeout:
-        throw 'Receive timeout';
+        return 'Receive timeout';
       case DioExceptionType.badResponse:
-        throw _handleResponseError(error.response?.statusCode);
+        return _handleResponseError(error.response?.statusCode);
       case DioExceptionType.cancel:
-        throw 'Request cancelled';
+        return 'Request cancelled';
       default:
-        throw 'Network error occurred';
+        return 'Network error occurred';
     }
   }
 
