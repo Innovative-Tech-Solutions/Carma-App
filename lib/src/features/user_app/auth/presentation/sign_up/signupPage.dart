@@ -1,6 +1,7 @@
 import 'package:carma_app/src/core/services/user_service.dart';
 import 'package:carma_app/src/core/utils/logger.dart';
 import 'package:carma_app/src/core/utils/service_locator.dart';
+import 'package:carma_app/src/core/utils/session_manager.dart';
 import 'package:carma_app/src/features/components/custom_button.dart';
 import 'package:carma_app/src/features/components/custom_signup_button.dart';
 import 'package:carma_app/src/features/user_app/auth/data/repo_impl/auth_repo_impl.dart';
@@ -22,6 +23,7 @@ class SignUpPage extends StatelessWidget {
       viewModelBuilder: () => SignUpViewModel(
           authRepository: locator<AuthRepository>(),
           userService: locator<UserService>(),
+          sessionManager: locator<SessionManager>(),
           navigationService: locator<NavigationService>(),
           dialogService: locator<DialogService>()),
       builder: (context, viewModel, _) => Scaffold(

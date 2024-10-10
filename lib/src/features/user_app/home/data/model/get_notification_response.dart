@@ -1,29 +1,40 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:carma_app/src/features/user_app/home/data/model/notification_data.dart';
 
 class GetNotificationResponse {
   final bool success;
-  final List<NotificationData> notifications;
+  final String? message;
+  final List<NotificationData>? notifications;
 
   GetNotificationResponse({
     required this.success,
-    required this.notifications,
+    this.message,
+    this.notifications,
   });
 
   factory GetNotificationResponse.fromJson(Map<String, dynamic> json) {
     return GetNotificationResponse(
       success: json['success'],
-      notifications: (json['noifications'] as List)
-          .map((data) => NotificationData.fromJson(data))
-          .toList(),
+      message: json['message'],
+      notifications: json['notifications'] != null
+          ? (json['notifications'] as List)
+              .map((item) => NotificationData.fromJson(item))
+              .toList()
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'success': success,
-      'noifications': notifications.map((n) => n.toJson()).toList(),
+      'message': message,
+      'notifications': notifications?.map((item) => item.toJson()).toList(),
     };
   }
+
+  @override
+  String toString() =>
+      'GetNotificationResponse(success: $success, message: $message, notifications: $notifications)';
 }
 
 class RequestData {

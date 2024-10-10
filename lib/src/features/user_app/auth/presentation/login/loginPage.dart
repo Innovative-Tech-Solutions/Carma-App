@@ -1,5 +1,6 @@
 import 'package:carma_app/src/core/services/user_service.dart';
 import 'package:carma_app/src/core/utils/service_locator.dart';
+import 'package:carma_app/src/core/utils/session_manager.dart';
 import 'package:carma_app/src/features/components/custom_button.dart';
 import 'package:carma_app/src/features/user_app/auth/domain/repository/auth_repo.dart';
 import 'package:carma_app/src/features/user_app/auth/presentation/login/login_vm.dart';
@@ -15,6 +16,7 @@ class LoginPage extends StatelessWidget {
     return ViewModelBuilder<LoginViewModel>.reactive(
         viewModelBuilder: () => LoginViewModel(
               authRepository: locator<AuthRepository>(),
+              sessionManager: locator<SessionManager>(),
               userService: locator<UserService>(),
               navigationService: locator<NavigationService>(),
             ),

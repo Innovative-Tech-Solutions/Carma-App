@@ -57,7 +57,7 @@ class DioService with ListenableServiceMixin {
       );
       return response.data as T;
     } on DioException catch (e) {
-      throw _handleError(e); // Changed to throw instead of just handling
+      throw _handleError(e);
     }
   }
 

@@ -34,15 +34,23 @@ class NotificationDataSourceImpl extends NotificationDatasource {
           endpoint:
               EndPoints.getUserNotification(_userService.currentUser!.id!));
 
+      AppLogger.log("Response: $response", tag: "getUserNotifications");
+
       if (response != null) {
-        final logOutResponse = GetNotificationResponse.fromJson(response);
-        return logOutResponse;
+        final getNotificationsResponse =
+            GetNotificationResponse.fromJson(response);
+        return getNotificationsResponse;
       }
     } catch (e) {
       AppLogger.logError("Error while getting notifications $e",
           tag: "NotificationDataSourceImpl");
+      return GetNotificationResponse(
+          success: false, message: e.toString(), notifications: []);
     }
-    return GetNotificationResponse(success: false, notifications: []);
+    return GetNotificationResponse(
+        success: false,
+        message: "Unable to get your notifications",
+        notifications: []);
   }
 
   @override

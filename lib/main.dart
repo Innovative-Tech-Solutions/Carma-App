@@ -12,8 +12,8 @@ import 'package:carma_app/src/features/mechanic_app/mechanic_services/schedule.d
 import 'package:carma_app/src/features/mechanic_app/mechanic_user/mechanic_profile.dart';
 import 'package:carma_app/src/features/user_app/auth/presentation/login/loginPage.dart';
 import 'package:carma_app/src/features/user_app/auth/presentation/sign_up/signupPage.dart';
-import 'package:carma_app/src/features/user_app/chat/chat.dart';
-import 'package:carma_app/src/features/user_app/chat/chat_view.dart';
+import 'package:carma_app/src/features/user_app/chat/presentation/views/chat_view/chat_view.dart';
+import 'package:carma_app/src/features/user_app/chat/presentation/views/chat_room/chat_rooms_view.dart';
 import 'package:carma_app/src/features/user_app/home/presentation/home/homePage.dart';
 import 'package:carma_app/src/features/user_app/notification/notification.dart';
 import 'package:carma_app/src/features/user_app/notification/notification_body.dart';

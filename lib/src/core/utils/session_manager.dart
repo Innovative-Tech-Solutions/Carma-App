@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 const localCacheBox = "local_cache";
+const loginKey = 'isLoggedIn';
 
 class SessionManager {
   final secureStorage = const FlutterSecureStorage();
@@ -12,6 +13,14 @@ class SessionManager {
 
   SessionManager() {
     _localCache = Hive.box(localCacheBox);
+  }
+
+  Future<void> storeBool(String key, bool value) async {
+    await _localCache.put(key, value);
+  }
+
+  bool? getBool(String key) {
+    return _localCache.get(key) as bool?;
   }
 
   Future<void> storeBuiltInType(String key, String value) async {
@@ -95,13 +104,5 @@ class SessionManager {
 
   Future<void> deleteStoredBuiltInType(String key) async {
     await _localCache.delete(key);
-  }
-
-  Future<void> storeBool(String key, bool value) async {
-    await _localCache.put(key, value);
-  }
-
-  bool? getBool(String key) {
-    return _localCache.get(key) as bool?;
   }
 }

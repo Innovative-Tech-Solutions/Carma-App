@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:carma_app/src/features/user_app/home/data/model/get_notification_response.dart';
 
 class NotificationData {
@@ -53,5 +54,10 @@ class NotificationData {
       'updatedAt': updatedAt.toIso8601String(),
       '__v': version,
     };
+  }
+
+  @override
+  String toString() {
+    return 'NotificationData(requestData: $requestData, id: $id, accountType: $accountType, target: $target, message: $message, type: $type, read: $read, createdAt: $createdAt, updatedAt: $updatedAt, version: $version)';
   }
 }

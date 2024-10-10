@@ -4,6 +4,7 @@ import 'package:carma_app/src/core/model/user_data.dart';
 import 'package:carma_app/src/core/services/user_service.dart';
 import 'package:carma_app/src/core/utils/enhanced_base_view_model.dart';
 import 'package:carma_app/src/core/utils/logger.dart';
+import 'package:carma_app/src/core/utils/session_manager.dart';
 import 'package:carma_app/src/core/utils/toast_helper.dart';
 import 'package:carma_app/src/features/user_app/auth/data/model/sign_up_params.dart';
 import 'package:carma_app/src/features/user_app/auth/domain/repository/auth_repo.dart';
@@ -15,6 +16,7 @@ import '../../domain/entity/auth_result_entity.dart';
 class SignUpViewModel extends EnhancedBaseViewModel {
   final AuthRepository _authRepository;
   final UserService _userService;
+  final SessionManager _sessionManager;
   final NavigationService _navigationService;
   final DialogService _dialogService;
 
@@ -22,9 +24,11 @@ class SignUpViewModel extends EnhancedBaseViewModel {
       {required AuthRepository authRepository,
       required UserService userService,
       required NavigationService navigationService,
+      required SessionManager sessionManager,
       required DialogService dialogService})
       : _authRepository = authRepository,
         _userService = userService,
+        _sessionManager = sessionManager,
         _navigationService = navigationService,
         _dialogService = dialogService;
 
@@ -79,6 +83,7 @@ class SignUpViewModel extends EnhancedBaseViewModel {
 
         if (activationResult!.success) {
           Toast.showSuccessToast(message: "Account activated successfully!");
+          _sessionManager.storeBool(loginKey, true);
           _navigationService.clearStackAndShow(Routes.homePage);
         } else {
           Toast.showErrorToast(
