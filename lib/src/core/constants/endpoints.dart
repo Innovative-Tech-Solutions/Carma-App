@@ -15,4 +15,14 @@ class EndPoints {
   static String deleteNotification(String id) => '/delete-notification/$id';
   static String deleteAllNotifications(String id) =>
       '/delete-all-notifications/$id';
+
+  static String getUserInfo = "/me";
+  static String updateUserInfo = "/update-user-info";
+
+  static String createGarage = "/create-garage";
+  static String deleteGarage = "/delete-garage";
+  static String addCar = "/add-car";
+  static String deleteCar = "/delete-car";
+  static String getMyGarage = "/get-garage";
+  static String getMyCars = "/get-mycars";
 }

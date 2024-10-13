@@ -4,7 +4,7 @@ import 'package:carma_app/src/core/services/user_service.dart';
 import 'package:carma_app/src/core/utils/logger.dart';
 import 'package:carma_app/src/core/utils/toast_helper.dart';
 import 'package:carma_app/src/features/user_app/chat/data/model/chat_room_model.dart';
-import 'package:socket_io_client/socket_io_client.dart';
+
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -32,16 +32,23 @@ class ChatRoomsViewModel extends BaseViewModel {
       AppLogger.log('Initializing socket for chat rooms',
           tag: 'ChatRoomsViewModel');
 
-      _socketService.initializeSocket(_userService.currentUser!.id ?? '');
+      _socketService
+          .initializeSocket(_userService.currentUser!.activationToken ?? '');
 
-      _socketService.socket.onConnect((_) {
+      _socketService.socket.on('connect', (_) {
+        AppLogger.log("Successfully connected to Server",
+            tag: "ChatRoomsViewModel");
+        isLoading = false;
         isConnected = true;
         hasError = false;
         notifyListeners();
+        _setupSocketListeners();
         Toast.showSuccessToast(message: 'Connected to server successfully');
       });
 
-      _socketService.socket.onConnectError((data) {
+      _socketService.socket.on('connect_error', (data) {
+        AppLogger.logError("Error connecting to socket",
+            tag: "ChatRoomsViewModel");
         isConnected = false;
         hasError = true;
         isLoading = false;
@@ -49,13 +56,17 @@ class ChatRoomsViewModel extends BaseViewModel {
         Toast.showErrorToast(message: 'Unable to connect to server');
       });
 
-      _socketService.socket.onDisconnect((_) {
+      _socketService.socket.on('disconnect', (_) {
+        AppLogger.logError("Disconnected from socket",
+            tag: "ChatRoomsViewModel");
         isConnected = false;
         notifyListeners();
         Toast.showWarningToast(message: 'Disconnected from server');
       });
 
       Future.delayed(const Duration(seconds: 10), () {
+        AppLogger.log("Reached loading time of 10 seconds",
+            tag: "ChatRoomsViewModel");
         if (!isConnected && isLoading) {
           isLoading = false;
           hasError = true;
@@ -63,8 +74,6 @@ class ChatRoomsViewModel extends BaseViewModel {
           Toast.showErrorToast(message: 'Connection timeout. Please try again');
         }
       });
-
-      _setupSocketListeners();
 
       AppLogger.logSuccess('Socket initialized successfully',
           tag: 'ChatRoomsViewModel');

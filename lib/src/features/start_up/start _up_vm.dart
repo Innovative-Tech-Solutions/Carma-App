@@ -28,7 +28,7 @@ class StartUpViewModel extends BaseViewModel {
 
     if (isLoggedIn) {
       AppLogger.log("Navigation to Home", tag: "StartUpViewModel");
-      _navigationService.replaceWith(Routes.homePage);
+      _navigationService.replaceWith(Routes.chatRoomsView);
     } else {
       AppLogger.log("Navigation to Login", tag: "StartUpViewModel");
 

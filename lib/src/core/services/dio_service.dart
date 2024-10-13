@@ -5,8 +5,7 @@ class DioService with ListenableServiceMixin {
   final Dio _dio;
 
   DioService() : _dio = Dio() {
-    _dio.options.baseUrl =
-        'https://userapi.carmagard.com/api/v1'; // TODO: Check if this Base url
+    _dio.options.baseUrl = 'https://userapi.carmagard.com/api/v1';
     _dio.options.connectTimeout = const Duration(seconds: 5);
     _dio.options.receiveTimeout = const Duration(seconds: 3);
 
@@ -70,6 +69,28 @@ class DioService with ListenableServiceMixin {
   }) async {
     try {
       final response = await _dio.put(
+        endpoint,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+        cancelToken: cancelToken,
+      );
+      return response.data as T;
+    } on DioException catch (e) {
+      _handleError(e);
+      return null;
+    }
+  }
+
+  Future<T?> patch<T>({
+    required String endpoint,
+    dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+  }) async {
+    try {
+      final response = await _dio.patch(
         endpoint,
         data: data,
         queryParameters: queryParameters,

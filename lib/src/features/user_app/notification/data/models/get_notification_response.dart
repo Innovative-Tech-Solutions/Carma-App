@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:carma_app/src/features/user_app/home/data/model/notification_data.dart';
+import 'package:carma_app/src/features/user_app/notification/data/models/notification_data.dart';
 
 class GetNotificationResponse {
   final bool success;

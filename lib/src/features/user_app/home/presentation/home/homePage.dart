@@ -1,3 +1,5 @@
+import 'package:carma_app/src/core/utils/service_locator.dart';
+import 'package:carma_app/src/features/user_app/notification/domain/repository/notification_repo.dart';
 import 'package:carma_app/src/features/user_app/home/presentation/home/home_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -10,7 +12,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
-        viewModelBuilder: () => HomeViewModel(),
+        viewModelBuilder: () => HomeViewModel(
+            notificationRepository: locator<NotificationRepository>()),
         builder: (context, model, _) => Scaffold(
               appBar: AppBar(
                 backgroundColor: const Color.fromARGB(255, 243, 148, 30),
@@ -24,9 +27,9 @@ class HomePage extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Badge(
-                            isLabelVisible: false,
-                            child: FaIcon(
+                          Badge(
+                            isLabelVisible: model.getNotificationBadgeStatus,
+                            child: const FaIcon(
                               FontAwesomeIcons.solidBell,
                               color: Color.fromARGB(255, 243, 148, 30),
                             ),

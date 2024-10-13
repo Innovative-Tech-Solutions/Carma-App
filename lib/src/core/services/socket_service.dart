@@ -5,7 +5,6 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import 'package:injectable/injectable.dart';
 
-@lazySingleton
 class SocketService {
   IO.Socket? _socket;
   final String baseUrl = 'https://chatapi.carmagard.com';
@@ -19,12 +18,18 @@ class SocketService {
   }
 
   void initializeSocket(String token) {
+    AppLogger.log("Initializing socket with $token", tag: "SocketService");
     _socket = IO.io(baseUrl, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
       'query': {'token': token},
     });
     _socket!.connect();
+
+    _socket!.onConnect((v) {
+      AppLogger.log("Successfully connected to Server: $v",
+          tag: "SocketService");
+    });
   }
 
   bool get isInitialized => _socket != null;
@@ -38,7 +43,9 @@ class SocketService {
   }
 
   void listenToRooms(Function(List<ChatRoom>) onRooms) {
+    AppLogger.log("Listening to rooms", tag: "SocketService");
     socket.on('rooms', (data) {
+      AppLogger.log("Rooms data from Socket: $data", tag: "SocketService");
       final rooms =
           (data as List).map((room) => ChatRoom.fromJson(room)).toList();
       onRooms(rooms);

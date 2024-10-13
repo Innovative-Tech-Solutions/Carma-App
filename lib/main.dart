@@ -15,8 +15,8 @@ import 'package:carma_app/src/features/user_app/auth/presentation/sign_up/signup
 import 'package:carma_app/src/features/user_app/chat/presentation/views/chat_view/chat_view.dart';
 import 'package:carma_app/src/features/user_app/chat/presentation/views/chat_room/chat_rooms_view.dart';
 import 'package:carma_app/src/features/user_app/home/presentation/home/homePage.dart';
-import 'package:carma_app/src/features/user_app/notification/notification.dart';
-import 'package:carma_app/src/features/user_app/notification/notification_body.dart';
+import 'package:carma_app/src/features/user_app/notification/presentation/views/notifications/notifications_view.dart';
+import 'package:carma_app/src/features/user_app/notification/presentation/views/notification_body/notification_body.dart';
 import 'package:carma_app/src/features/user_app/scanner/scanner.dart';
 import 'package:carma_app/src/features/user_app/scanner/scanner_history.dart';
 import 'package:carma_app/src/features/user_app/scanner/scanner_livedata.dart';
@@ -29,7 +29,7 @@ import 'package:carma_app/src/features/user_app/services/post_inspection_screen.
 import 'package:carma_app/src/features/user_app/services/returning_customer_Screen.dart';
 import 'package:carma_app/src/features/user_app/services/serviceScreen.dart';
 import 'package:carma_app/src/features/user_app/services/user_booking_history_screen.dart';
-import 'package:carma_app/src/features/user_app/user/profile_screen.dart';
+import 'package:carma_app/src/features/user_app/user/presentation/views/profile_screen/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:stacked_services/stacked_services.dart';
