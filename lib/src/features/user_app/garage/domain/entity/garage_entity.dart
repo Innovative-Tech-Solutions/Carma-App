@@ -1,10 +1,11 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:carma_app/src/features/user_app/garage/domain/entity/car_entity.dart';
 
 class Garage {
   final String id;
   final String name;
   final String userId;
-  final List<Car> myCars;
+  List<Car> myCars;
   final String createdAt;
   final String updatedAt;
   final int v;
@@ -19,7 +20,6 @@ class Garage {
     required this.v,
   });
 
-  // Factory method to create a Garage object from JSON
   factory Garage.fromJson(Map<String, dynamic> json) {
     var carsList = json['myCars'] as List;
     List<Car> cars = carsList.map((carJson) => Car.fromJson(carJson)).toList();
@@ -35,7 +35,6 @@ class Garage {
     );
   }
 
-  // Method to convert a Garage object to JSON
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
@@ -46,5 +45,10 @@ class Garage {
       'updatedAt': updatedAt,
       '__v': v,
     };
+  }
+
+  @override
+  String toString() {
+    return 'Garage(id: $id, name: $name, userId: $userId, myCars: $myCars, createdAt: $createdAt, updatedAt: $updatedAt, v: $v)';
   }
 }

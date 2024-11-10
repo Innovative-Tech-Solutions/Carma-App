@@ -1,13 +1,28 @@
+import 'package:carma_app/src/core/utils/logger.dart';
+import 'package:carma_app/src/core/utils/session_manager.dart';
 import 'package:dio/dio.dart';
 import 'package:stacked/stacked.dart';
 
 class DioService with ListenableServiceMixin {
   final Dio _dio;
+  final SessionManager sessionManager;
+  String? _authToken;
 
-  DioService() : _dio = Dio() {
+  static const String _tokenKey = 'auth_token';
+
+  DioService({required this.sessionManager}) : _dio = Dio() {
     _dio.options.baseUrl = 'https://userapi.carmagard.com/api/v1';
     _dio.options.connectTimeout = const Duration(seconds: 5);
     _dio.options.receiveTimeout = const Duration(seconds: 3);
+
+    _dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) {
+        if (_authToken != null) {
+          options.headers['Authorization'] = 'Bearer $_authToken';
+        }
+        return handler.next(options);
+      },
+    ));
 
     _dio.interceptors.add(LogInterceptor(
       request: true,
@@ -17,6 +32,45 @@ class DioService with ListenableServiceMixin {
       responseBody: true,
       error: true,
     ));
+
+    _initializeToken();
+  }
+
+  Future<void> _initializeToken() async {
+    AppLogger.log("Initializing auth token from local storage",
+        tag: "DioService");
+    try {
+      final token = await sessionManager.getCachedBuiltInType(_tokenKey);
+      if (token != null && token != _authToken) {
+        _authToken = token;
+        notifyListeners();
+      }
+    } catch (e) {
+      AppLogger.logError(
+        "Error initializing token: $e",
+        tag: "DioService",
+      );
+    }
+  }
+
+  Future<void> setAuthToken(String token) async {
+    try {
+      _authToken = token;
+      await sessionManager.storeBuiltInType(_tokenKey, token);
+      notifyListeners();
+    } catch (e) {
+      AppLogger.logError("Unable to set your auth token: $e");
+    }
+  }
+
+  Future<void> clearAuthToken() async {
+    try {
+      _authToken = null;
+      await sessionManager.deleteStoredBuiltInType(_tokenKey);
+      notifyListeners();
+    } catch (e) {
+      AppLogger.logError("Unable to clear your auth token: $e");
+    }
   }
 
   Future<T?> get<T>({
@@ -26,6 +80,7 @@ class DioService with ListenableServiceMixin {
     CancelToken? cancelToken,
   }) async {
     try {
+      AppLogger.log("Fetching with token: ${_authToken}", tag: "DioService");
       final response = await _dio.get(
         endpoint,
         queryParameters: queryParameters,

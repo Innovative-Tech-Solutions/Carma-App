@@ -59,7 +59,8 @@ class UserService with ListenableServiceMixin {
   }
 
   Future<void> clearUserData() async {
-    await _sessionManager.deleteStoredBuiltInType(userDataKey);
+    await _sessionManager.deleteObject(userDataKey);
+    await _sessionManager.deleteStoredBuiltInType(loginKey);
     _currentUser = null;
     notifyListeners();
   }

@@ -35,9 +35,9 @@ class UserDataSourceImpl extends UserDatasource {
           tag: "getUserInfo");
 
       if (response != null) {
-        final getNotificationsResponse = GetUserInfoResponse.fromJson(response);
-        if (getNotificationsResponse.success) {
-          final UserData? userFromGet = getNotificationsResponse.user;
+        final getUserInfoResponse = GetUserInfoResponse.fromJson(response);
+        if (getUserInfoResponse.success) {
+          final UserData? userFromGet = getUserInfoResponse.user;
           final userData = _userService.currentUser!.copyWith(
             subscription: userFromGet?.subscription,
             id: userFromGet?.id,
@@ -52,10 +52,10 @@ class UserDataSourceImpl extends UserDatasource {
           );
 
           await _userService.setCurrentUser(userData);
-          AppLogger.log("User after registration: ${_userService.currentUser}",
-              tag: "registerUser");
+          AppLogger.log("User after getting info: ${_userService.currentUser}",
+              tag: "getUserInfo");
         }
-        return getNotificationsResponse;
+        return getUserInfoResponse;
       }
     } catch (e) {
       AppLogger.logError("Error while getting user info $e",
@@ -64,9 +64,7 @@ class UserDataSourceImpl extends UserDatasource {
           success: false, message: e.toString(), user: null);
     }
     return GetUserInfoResponse(
-        success: false,
-        message: "Unable to get your notifications",
-        user: null);
+        success: false, message: "Unable to get user info", user: null);
   }
 
   @override
@@ -85,10 +83,9 @@ class UserDataSourceImpl extends UserDatasource {
           tag: "updateInfo");
 
       if (response != null) {
-        final updateNotificationsResponse =
-            UpdateInfoResponse.fromJson(response);
-        if (updateNotificationsResponse.success) {
-          final UserData? userFromGet = updateNotificationsResponse.user;
+        final updateUserInfoResponse = UpdateInfoResponse.fromJson(response);
+        if (updateUserInfoResponse.success) {
+          final UserData? userFromGet = updateUserInfoResponse.user;
           final userData = _userService.currentUser!.copyWith(
             subscription: userFromGet?.subscription,
             id: userFromGet?.id,
@@ -103,20 +100,18 @@ class UserDataSourceImpl extends UserDatasource {
           );
 
           await _userService.setCurrentUser(userData);
-          AppLogger.log("User after registration: ${_userService.currentUser}",
-              tag: "registerUser");
+          AppLogger.log("User after updating info: ${_userService.currentUser}",
+              tag: "updateInfo");
         }
-        return updateNotificationsResponse;
+        return updateUserInfoResponse;
       }
     } catch (e) {
-      AppLogger.logError("Error while getting user info $e",
+      AppLogger.logError("Error while updating user info $e",
           tag: "UserDataSourceImpl");
       return UpdateInfoResponse(
           success: false, message: e.toString(), user: null);
     }
     return UpdateInfoResponse(
-        success: false,
-        message: "Unable to get your notifications",
-        user: null);
+        success: false, message: "Unable to get update your info", user: null);
   }
 }

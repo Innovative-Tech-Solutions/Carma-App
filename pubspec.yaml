@@ -47,6 +47,7 @@ dependencies:
   flutter_secure_storage: ^4.2.1
   socket_io_client: ^3.0.0
   injectable: ^2.5.0
+  google_maps_flutter: ^2.9.0
 
 dev_dependencies:
   flutter_test:

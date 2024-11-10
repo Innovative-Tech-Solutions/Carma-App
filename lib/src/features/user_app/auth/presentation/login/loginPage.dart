@@ -137,6 +137,7 @@ class LoginPage extends StatelessWidget {
                       CustomButton(
                         buttonTitle: 'Login',
                         onTap: () => viewModel.login(),
+                        isLoading: viewModel.isBusy,
                       ),
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.center,

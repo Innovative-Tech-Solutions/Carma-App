@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -13,8 +14,9 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
         viewModelBuilder: () => HomeViewModel(
-            notificationRepository: locator<NotificationRepository>()),
-        builder: (context, model, _) => Scaffold(
+            notificationRepository: locator<NotificationRepository>(),
+            navigationService: locator<NavigationService>()),
+        builder: (context, viewModel, _) => Scaffold(
               appBar: AppBar(
                 backgroundColor: const Color.fromARGB(255, 243, 148, 30),
               ),
@@ -27,11 +29,15 @@ class HomePage extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Badge(
-                            isLabelVisible: model.getNotificationBadgeStatus,
-                            child: const FaIcon(
-                              FontAwesomeIcons.solidBell,
-                              color: Color.fromARGB(255, 243, 148, 30),
+                          GestureDetector(
+                            onTap: () => viewModel.goToNotificationsScreen(),
+                            child: Badge(
+                              isLabelVisible:
+                                  viewModel.getNotificationBadgeStatus,
+                              child: const FaIcon(
+                                FontAwesomeIcons.solidBell,
+                                color: Color.fromARGB(255, 243, 148, 30),
+                              ),
                             ),
                           ),
                           Image.asset('assets/images/carmalogo.png')
@@ -42,10 +48,13 @@ class HomePage extends StatelessWidget {
                         children: [
                           Column(
                             children: [
-                              const CircleAvatar(
-                                radius: 40,
-                                backgroundImage:
-                                    AssetImage('assets/images/profile.png'),
+                              GestureDetector(
+                                onTap: () => viewModel.goToProfileScreen(),
+                                child: const CircleAvatar(
+                                  radius: 40,
+                                  backgroundImage:
+                                      AssetImage('assets/images/profile.png'),
+                                ),
                               ),
                               Text(
                                 'Hi, JOHN',
@@ -87,47 +96,53 @@ class HomePage extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 20),
-                      Card(
-                        elevation: 4,
-                        child: Container(
-                          height: 167,
-                          width: 345,
-                          decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 232, 228, 228),
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Image.asset('assets/images/garage.png'),
-                                    const Icon(
-                                      Icons.arrow_forward_ios_rounded,
-                                      color: Color.fromARGB(255, 149, 149, 149),
-                                    )
-                                  ],
-                                ),
-                                Text(
-                                  'Garage',
-                                  style: GoogleFonts.openSans(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
+                      GestureDetector(
+                        onTap: () => viewModel.goToGarageScreen(),
+                        child: Card(
+                          elevation: 4,
+                          child: Container(
+                            height: 167,
+                            width: 345,
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 232, 228, 228),
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Image.asset('assets/images/garage.png'),
+                                      const Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color:
+                                            Color.fromARGB(255, 149, 149, 149),
+                                      )
+                                    ],
                                   ),
-                                ),
-                                Text(
-                                  'Hire someone to do the job for you',
-                                  style: GoogleFonts.openSans(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w700,
-                                      color: const Color.fromARGB(255, 0, 0, 0)
-                                          .withOpacity(0.4)),
-                                ),
-                              ],
+                                  Text(
+                                    'Garage',
+                                    style: GoogleFonts.openSans(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Hire someone to do the job for you',
+                                    style: GoogleFonts.openSans(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w700,
+                                        color:
+                                            const Color.fromARGB(255, 0, 0, 0)
+                                                .withOpacity(0.4)),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),

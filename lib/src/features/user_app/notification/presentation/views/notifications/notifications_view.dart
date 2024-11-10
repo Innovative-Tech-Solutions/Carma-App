@@ -1,103 +1,80 @@
+import 'package:carma_app/src/core/utils/service_locator.dart';
+import 'package:carma_app/src/features/user_app/notification/domain/repository/notification_repo.dart';
+import 'package:carma_app/src/features/user_app/notification/presentation/views/notifications/notifications_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
-class NotificationScreen extends StatefulWidget {
+class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
 
   @override
-  State createState() => _NotificationScreenState();
-}
-
-class _NotificationScreenState extends State<NotificationScreen> {
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 243, 148, 30),
-        leading: Image.asset(
-          'assets/images/backbutton.png',
-          color: Colors.white,
+    return ViewModelBuilder<NotificationsViewModel>.reactive(
+      viewModelBuilder: () => NotificationsViewModel(
+          notificationRepository: locator<NotificationRepository>(),
+          navigationService: locator<NavigationService>()),
+      onViewModelReady: (viewModel) => viewModel.getUserNotifications(),
+      builder: (context, viewModel, child) => Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: const Color.fromARGB(255, 243, 148, 30),
+          leading: GestureDetector(
+            onTap: () => viewModel.goBack(),
+            child: Image.asset(
+              'assets/images/backbutton.png',
+              color: Colors.white,
+            ),
+          ),
+          title: Column(
+            children: [
+              Text(
+                'Notifications',
+                style: GoogleFonts.openSans(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                'You have ${viewModel.notifications.length} notifications today',
+                style: GoogleFonts.openSans(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          centerTitle: true,
         ),
-        title: Column(
-          children: [
-            Text(
-              'Notifications',
-              style: GoogleFonts.openSans(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+        body: viewModel.isBusy
+            ? const Center(child: CircularProgressIndicator())
+            : Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: ListView(
+                  children: [
+                    const SizedBox(height: 16.0),
+                    const Text(
+                      'Today',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                    const SizedBox(height: 8.0),
+                    ...viewModel.notifications
+                        .map((notification) => NotificationItem(
+                              avatar: 'assets/images/user.png',
+                              title: notification.type ?? '',
+                              subtitle: notification.message ?? '',
+                              timeAgo: notification.createdAt.toString() ?? '',
+                            )),
+                  ],
+                ),
               ),
-            ),
-            Text(
-              'You have 3 notification today',
-              style: GoogleFonts.openSans(
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-        centerTitle: true,
-      ),
-      body: const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 16.0),
-            Text(
-              'Today',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
-              ),
-            ),
-            SizedBox(height: 8.0),
-            NotificationItem(
-              avatar: 'assets/images/user.png',
-              title: 'Request for service',
-              rating: 5,
-              timeAgo: '3h ago',
-            ),
-            NotificationItem(
-              avatar: 'assets/images/user.png',
-              title: 'Payment successful',
-              subtitle: 'Transaction Confirmed',
-              timeAgo: '8h ago',
-            ),
-            NotificationItem(
-              avatar: 'assets/images/user.png',
-              title: 'User account',
-              subtitle: 'Edit information',
-              timeAgo: '18h ago',
-            ),
-            SizedBox(height: 16.0),
-            Text(
-              'This Week',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18.0,
-              ),
-            ),
-            SizedBox(height: 8.0),
-            NotificationItem(
-              avatar: 'assets/images/user.png',
-              title: 'Taylor Jadson',
-              rating: 4,
-              subtitle: 'Request for Rating',
-              timeAgo: '7 June',
-            ),
-            NotificationItem(
-              avatar: 'assets/images/user.png',
-              title: 'Faith Taiwo',
-              rating: 3,
-              subtitle: 'Request for Rating',
-              timeAgo: '7 June',
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -106,15 +83,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
 class NotificationItem extends StatelessWidget {
   final String avatar;
   final String title;
-  final String? subtitle;
-  final int? rating;
+  final String subtitle;
   final String timeAgo;
 
   const NotificationItem({
     required this.avatar,
     required this.title,
-    this.subtitle,
-    this.rating,
+    required this.subtitle,
     required this.timeAgo,
     super.key,
   });
@@ -143,39 +118,29 @@ class NotificationItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      if (rating != null) ...[
-                        for (int i = 0; i < rating!; i++)
-                          const Icon(Icons.star,
-                              color: Colors.yellow, size: 16),
-                        for (int i = rating!; i < 5; i++)
-                          const Icon(Icons.star, color: Colors.grey, size: 16),
-                        const SizedBox(width: 8.0),
-                      ],
-                      Text(
-                        title,
-                        style: GoogleFonts.inder(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 13,
-                            color: const Color.fromARGB(255, 151, 151, 151)),
-                      ),
-                    ],
-                  ),
-                  if (subtitle != null)
-                    Text(
-                      subtitle!,
-                      style: GoogleFonts.inder(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 13,
-                          color: const Color.fromARGB(255, 151, 151, 151)),
+                  Text(
+                    title,
+                    style: GoogleFonts.inder(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 13,
+                      color: const Color.fromARGB(255, 151, 151, 151),
                     ),
+                  ),
+                  Text(
+                    subtitle,
+                    style: GoogleFonts.inder(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 13,
+                      color: const Color.fromARGB(255, 151, 151, 151),
+                    ),
+                  ),
                   Text(
                     timeAgo,
                     style: GoogleFonts.inder(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 13,
-                        color: const Color.fromARGB(255, 151, 151, 151)),
+                      fontWeight: FontWeight.w400,
+                      fontSize: 13,
+                      color: const Color.fromARGB(255, 151, 151, 151),
+                    ),
                   ),
                 ],
               ),

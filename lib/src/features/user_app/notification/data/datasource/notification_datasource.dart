@@ -42,6 +42,9 @@ class NotificationDataSourceImpl extends NotificationDatasource {
       if (response != null) {
         final getNotificationsResponse =
             GetNotificationResponse.fromJson(response);
+        AppLogger.log(
+            "GetNotificationResponse.fromJso: $getNotificationsResponse",
+            tag: "getUserNotifications");
         return getNotificationsResponse;
       }
     } catch (e) {

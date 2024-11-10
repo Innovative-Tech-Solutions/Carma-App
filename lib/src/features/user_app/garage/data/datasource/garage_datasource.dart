@@ -64,6 +64,11 @@ class GarageDataSourceImpl extends GarageDatasource {
 
       if (response != null) {
         final addCarResponse = AddCarResponseEntity.fromJson(response);
+        final user =
+            _userService.currentUser!.copyWith(garage: addCarResponse.garage);
+        _userService.setCurrentUser(user);
+        AppLogger.log("New User from adding car: ${_userService.currentUser}",
+            tag: "GarageDataSourceImpl");
         return addCarResponse;
       }
     } catch (e) {
@@ -152,6 +157,14 @@ class GarageDataSourceImpl extends GarageDatasource {
 
       if (response != null) {
         final getGarageResponse = GetMyGarageResponseEntity.fromJson(response);
+        final user = _userService.currentUser!
+            .copyWith(garage: getGarageResponse.garage);
+        _userService.setCurrentUser(user);
+
+        AppLogger.log(
+            "New User from getting my garage: ${_userService.currentUser}",
+            tag: "GarageDataSourceImpl");
+
         return getGarageResponse;
       }
     } catch (e) {

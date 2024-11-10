@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:carma_app/src/features/user_app/garage/domain/entity/garage_entity.dart';
+
 import 'subscription.dart';
 
 class UserData {
@@ -7,6 +9,7 @@ class UserData {
   final String email;
   final String? password;
   String? role;
+  Garage? garage;
   final bool isVerified;
   final bool isOnline;
   final List<dynamic> courses;
@@ -21,6 +24,7 @@ class UserData {
     required this.email,
     this.password,
     this.activationToken,
+    this.garage,
     this.role,
     this.isVerified = false,
     this.isOnline = false,
@@ -37,6 +41,7 @@ class UserData {
         name: json['name'] as String? ?? '',
         email: json['email'] as String? ?? '',
         password: json['password'] as String?,
+        garage: json['garage'] != null ? Garage.fromJson(json['garage']) : null,
         role: json['role'] as String?,
         activationToken: json['activationToken'] as String?,
         isVerified: json['isVerified'] as bool? ?? false,
@@ -70,6 +75,7 @@ class UserData {
         'password': password,
         'role': role,
         'isVerified': isVerified,
+        'garage': garage,
         'isOnline': isOnline,
         'courses': courses,
         'activationToken': activationToken,
@@ -85,6 +91,7 @@ class UserData {
     String? password,
     String? activationToken,
     String? role,
+    Garage? garage,
     bool? isVerified,
     bool? isOnline,
     List<dynamic>? courses,
@@ -98,6 +105,7 @@ class UserData {
       email: email ?? this.email,
       password: password ?? this.password,
       role: role ?? this.role,
+      garage: garage ?? this.garage,
       isVerified: isVerified ?? this.isVerified,
       activationToken: activationToken ?? this.activationToken,
       isOnline: isOnline ?? this.isOnline,
@@ -110,6 +118,6 @@ class UserData {
 
   @override
   String toString() {
-    return 'UserData(id: $id, name: $name, email: $email, password: $password, role: $role, isVerified: $isVerified, isOnline: $isOnline, courses: $courses, subscription: $subscription, activationToken: $activationToken, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'UserData(id: $id, name: $name, email: $email, password: $password, role: $role, garage: $garage, isVerified: $isVerified, isOnline: $isOnline, courses: $courses, subscription: $subscription, activationToken: $activationToken, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 }

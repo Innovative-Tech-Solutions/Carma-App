@@ -15,16 +15,17 @@ import 'package:carma_app/src/features/user_app/auth/presentation/sign_up/signup
 import 'package:carma_app/src/features/user_app/chat/presentation/views/chat_view/chat_view.dart';
 import 'package:carma_app/src/features/user_app/chat/presentation/views/chat_room/chat_rooms_view.dart';
 import 'package:carma_app/src/features/user_app/home/presentation/home/homePage.dart';
+import 'package:carma_app/src/features/user_app/map_screen/map_screen.dart';
 import 'package:carma_app/src/features/user_app/notification/presentation/views/notifications/notifications_view.dart';
 import 'package:carma_app/src/features/user_app/notification/presentation/views/notification_body/notification_body.dart';
 import 'package:carma_app/src/features/user_app/scanner/scanner.dart';
 import 'package:carma_app/src/features/user_app/scanner/scanner_history.dart';
 import 'package:carma_app/src/features/user_app/scanner/scanner_livedata.dart';
 import 'package:carma_app/src/features/user_app/scanner/wear_items.dart';
-import 'package:carma_app/src/features/user_app/services/add_garage_screen.dart';
+import 'package:carma_app/src/features/user_app/garage/presentation/views/add_garage/add_garage_screen.dart';
 import 'package:carma_app/src/features/user_app/services/booking_screen.dart';
 import 'package:carma_app/src/features/user_app/services/first_time_users.dart';
-import 'package:carma_app/src/features/user_app/services/my_garage_screen.dart';
+import 'package:carma_app/src/features/user_app/garage/presentation/views/my_garage/my_garage_screen.dart';
 import 'package:carma_app/src/features/user_app/services/post_inspection_screen.dart';
 import 'package:carma_app/src/features/user_app/services/returning_customer_Screen.dart';
 import 'package:carma_app/src/features/user_app/services/serviceScreen.dart';
@@ -42,6 +43,8 @@ void main() async {
   runApp(const MyApp());
 }
 
+Color primaryColor = Color.fromARGB(255, 243, 148, 30);
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -51,8 +54,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       navigatorKey: StackedService.navigatorKey,
+      theme: ThemeData(
+        primaryColor: primaryColor,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: primaryColor,
+        ),
+      ),
       onGenerateRoute: StackedRouter().onGenerateRoute,
-      // home: SignUpPage(),
+      home: MapScreen(),
       builder: (context, child) {
         final mediaQueryData = MediaQuery.of(context);
         final scale = mediaQueryData.textScaler.clamp(

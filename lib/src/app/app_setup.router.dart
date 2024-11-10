@@ -5,7 +5,7 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:carma_app/src/core/model/user_data.dart' as _i9;
+import 'package:carma_app/src/core/model/user_data.dart' as _i13;
 import 'package:carma_app/src/features/start_up/start_up_view.dart' as _i2;
 import 'package:carma_app/src/features/user_app/auth/presentation/login/loginPage.dart'
     as _i5;
@@ -15,12 +15,20 @@ import 'package:carma_app/src/features/user_app/chat/presentation/views/chat_roo
     as _i6;
 import 'package:carma_app/src/features/user_app/chat/presentation/views/chat_view/chat_view.dart'
     as _i7;
+import 'package:carma_app/src/features/user_app/garage/presentation/views/add_garage/add_garage_screen.dart'
+    as _i11;
+import 'package:carma_app/src/features/user_app/garage/presentation/views/my_garage/my_garage_screen.dart'
+    as _i10;
 import 'package:carma_app/src/features/user_app/home/presentation/home/homePage.dart'
     as _i4;
-import 'package:flutter/material.dart' as _i8;
+import 'package:carma_app/src/features/user_app/notification/presentation/views/notifications/notifications_view.dart'
+    as _i8;
+import 'package:carma_app/src/features/user_app/user/presentation/views/profile_screen/profile_screen.dart'
+    as _i9;
+import 'package:flutter/material.dart' as _i12;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i10;
+import 'package:stacked_services/stacked_services.dart' as _i14;
 
 class Routes {
   static const startUpView = '/';
@@ -35,6 +43,14 @@ class Routes {
 
   static const chatView = '/chat-view';
 
+  static const notificationScreen = '/notification-screen';
+
+  static const profileScreen = '/profile-screen';
+
+  static const myGarageScreen = '/my-garage-screen';
+
+  static const addGarageScreen = '/add-garage-screen';
+
   static const all = <String>{
     startUpView,
     signUpPage,
@@ -42,6 +58,10 @@ class Routes {
     loginPage,
     chatRoomsView,
     chatView,
+    notificationScreen,
+    profileScreen,
+    myGarageScreen,
+    addGarageScreen,
   };
 }
 
@@ -70,6 +90,22 @@ class StackedRouter extends _i1.RouterBase {
     _i1.RouteDef(
       Routes.chatView,
       page: _i7.ChatView,
+    ),
+    _i1.RouteDef(
+      Routes.notificationScreen,
+      page: _i8.NotificationScreen,
+    ),
+    _i1.RouteDef(
+      Routes.profileScreen,
+      page: _i9.ProfileScreen,
+    ),
+    _i1.RouteDef(
+      Routes.myGarageScreen,
+      page: _i10.MyGarageScreen,
+    ),
+    _i1.RouteDef(
+      Routes.addGarageScreen,
+      page: _i11.AddGarageScreen,
     ),
   ];
 
@@ -115,6 +151,30 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
+    _i8.NotificationScreen: (data) {
+      return _i1.buildAdaptivePageRoute<dynamic>(
+        builder: (context) => const _i8.NotificationScreen(),
+        settings: data,
+      );
+    },
+    _i9.ProfileScreen: (data) {
+      return _i1.buildAdaptivePageRoute<dynamic>(
+        builder: (context) => const _i9.ProfileScreen(),
+        settings: data,
+      );
+    },
+    _i10.MyGarageScreen: (data) {
+      return _i1.buildAdaptivePageRoute<dynamic>(
+        builder: (context) => const _i10.MyGarageScreen(),
+        settings: data,
+      );
+    },
+    _i11.AddGarageScreen: (data) {
+      return _i1.buildAdaptivePageRoute<dynamic>(
+        builder: (context) => const _i11.AddGarageScreen(),
+        settings: data,
+      );
+    },
   };
 
   @override
@@ -127,7 +187,7 @@ class StackedRouter extends _i1.RouterBase {
 class SignUpPageArguments {
   const SignUpPageArguments({this.key});
 
-  final _i8.Key? key;
+  final _i12.Key? key;
 
   @override
   String toString() {
@@ -153,11 +213,11 @@ class ChatViewArguments {
     required this.user,
   });
 
-  final _i8.Key? key;
+  final _i12.Key? key;
 
   final String roomId;
 
-  final _i9.UserData user;
+  final _i13.UserData user;
 
   @override
   String toString() {
@@ -176,7 +236,7 @@ class ChatViewArguments {
   }
 }
 
-extension NavigatorStateExtension on _i10.NavigationService {
+extension NavigatorStateExtension on _i14.NavigationService {
   Future<dynamic> navigateToStartUpView([
     int? routerId,
     bool preventDuplicates = true,
@@ -192,7 +252,7 @@ extension NavigatorStateExtension on _i10.NavigationService {
   }
 
   Future<dynamic> navigateToSignUpPage({
-    _i8.Key? key,
+    _i12.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -250,9 +310,9 @@ extension NavigatorStateExtension on _i10.NavigationService {
   }
 
   Future<dynamic> navigateToChatView({
-    _i8.Key? key,
+    _i12.Key? key,
     required String roomId,
-    required _i9.UserData user,
+    required _i13.UserData user,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -261,6 +321,62 @@ extension NavigatorStateExtension on _i10.NavigationService {
   }) async {
     return navigateTo<dynamic>(Routes.chatView,
         arguments: ChatViewArguments(key: key, roomId: roomId, user: user),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToNotificationScreen([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.notificationScreen,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToProfileScreen([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.profileScreen,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToMyGarageScreen([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.myGarageScreen,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToAddGarageScreen([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.addGarageScreen,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -282,7 +398,7 @@ extension NavigatorStateExtension on _i10.NavigationService {
   }
 
   Future<dynamic> replaceWithSignUpPage({
-    _i8.Key? key,
+    _i12.Key? key,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -340,9 +456,9 @@ extension NavigatorStateExtension on _i10.NavigationService {
   }
 
   Future<dynamic> replaceWithChatView({
-    _i8.Key? key,
+    _i12.Key? key,
     required String roomId,
-    required _i9.UserData user,
+    required _i13.UserData user,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -351,6 +467,62 @@ extension NavigatorStateExtension on _i10.NavigationService {
   }) async {
     return replaceWith<dynamic>(Routes.chatView,
         arguments: ChatViewArguments(key: key, roomId: roomId, user: user),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithNotificationScreen([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.notificationScreen,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithProfileScreen([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.profileScreen,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithMyGarageScreen([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.myGarageScreen,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithAddGarageScreen([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.addGarageScreen,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

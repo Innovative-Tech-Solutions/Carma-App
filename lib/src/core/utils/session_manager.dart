@@ -105,4 +105,23 @@ class SessionManager {
   Future<void> deleteStoredBuiltInType(String key) async {
     await _localCache.delete(key);
   }
+
+  Future<void> deleteObject(String key) async {
+    try {
+      await _localCache.delete(key);
+      AppLogger.logWarning("Object with key '$key' has been deleted.");
+    } catch (e) {
+      AppLogger.logError("Error deleting object: $e");
+    }
+  }
+
+  Future<void> deleteObjectList(String listKey) async {
+    try {
+      await _localCache.delete(listKey);
+      AppLogger.logWarning(
+          "List of objects with key '$listKey' has been deleted.");
+    } catch (e) {
+      AppLogger.logError("Error deleting object list: $e");
+    }
+  }
 }

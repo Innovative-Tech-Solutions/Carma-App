@@ -32,13 +32,22 @@ class LoginViewModel extends EnhancedBaseViewModel {
       TextEditingController(text: "fizzyonu@gmail.com");
   TextEditingController passwordCtr = TextEditingController(text: "jameshulk");
 
+  // bool _isLoading = false;
+  // bool get isLoading => _isLoading;
+
   Future login() async {
+    // _isLoading = true;
+    notifyListeners();
+
     final LoginParamsModel loginForm =
         LoginParamsModel(password: passwordCtr.text, email: emailCtr.text);
 
     final result = await runEitherFuture(
       _authRepository.login(loginForm),
     );
+
+    // _isLoading = false;
+    notifyListeners();
 
     if (result == null) {
       Toast.showErrorToast(message: errorMessage ?? "Error while signing up");

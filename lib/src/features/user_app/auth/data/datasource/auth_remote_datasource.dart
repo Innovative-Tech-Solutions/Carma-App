@@ -62,9 +62,17 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
 
       if (response != null) {
         final logOutResponse = LogOutResponse.fromJson(response);
+        if (logOutResponse.success) {
+          await _userService.clearUserData();
+          await _dioService.clearAuthToken();
+
+          AppLogger.log("Log out was successful");
+        }
         return logOutResponse;
       }
-    } catch (e) {}
+    } catch (e) {
+      return LogOutResponse(success: false, message: e.toString());
+    }
     return LogOutResponse(
         success: false, message: "You are not able to sign in");
   }
@@ -95,6 +103,8 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
             updatedAt: DateTime.now(),
           );
 
+          await _dioService.setAuthToken(userData.activationToken!);
+
           await _userService.setCurrentUser(userData);
           AppLogger.log("User after registration: ${_userService.currentUser}",
               tag: "registerUser");
@@ -119,10 +129,10 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
   }
 
   @override
-  Future<LoginResponse> login(LoginParamsModel loginModel) async {
+  Future<LoginResponse> login(LoginParamsModel loginForm) async {
     try {
       final response = await _dioService.post(
-          endpoint: EndPoints.login, data: loginModel.toJson());
+          endpoint: EndPoints.login, data: loginForm.toJson());
 
       if (response != null) {
         final loginResponse = LoginResponse.fromJson(response);
@@ -145,6 +155,8 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
           );
+
+          await _dioService.setAuthToken(user.activationToken!);
 
           _userService.setCurrentUser(user);
           AppLogger.log("User after login: ${_userService.currentUser}");
@@ -190,27 +202,31 @@ class AuthRemoteDataSourceImpl extends AuthRemoteDataSource {
 
   @override
   Future<bool> verifyForgotPassword(String resetToken) async {
-    try {
-      final response =
-          await _dioService.get(endpoint: EndPoints.verifyForgotPassword);
+    // TODO: implement updatePassword
+    throw UnimplementedError();
+    // try {
+    //   final response =
+    //       await _dioService.get(endpoint: EndPoints.verifyForgotPassword);
 
-      if (response != null) {
-        return true;
-      }
-    } catch (e) {}
-    return false;
+    //   if (response != null) {
+    //     return true;
+    //   }
+    // } catch (e) {}
+    // return false;
   }
 
   @override
   Future<bool> saveNewPassword(String newPassword) async {
-    try {
-      final response =
-          await _dioService.get(endpoint: EndPoints.saveNewPassword);
+    // TODO: implement updatePassword
+    throw UnimplementedError();
+    // try {
+    //   final response =
+    //       await _dioService.get(endpoint: EndPoints.saveNewPassword);
 
-      if (response != null) {
-        return true;
-      }
-    } catch (e) {}
-    return false;
+    //   if (response != null) {
+    //     return true;
+    //   }
+    // } catch (e) {}
+    // return false;
   }
 }

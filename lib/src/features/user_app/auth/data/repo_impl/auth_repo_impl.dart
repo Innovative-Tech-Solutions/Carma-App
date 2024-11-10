@@ -6,6 +6,7 @@ import 'package:carma_app/src/features/user_app/auth/data/datasource/auth_remote
 import 'package:carma_app/src/features/user_app/auth/data/model/activation_response.dart';
 import 'package:carma_app/src/features/user_app/auth/data/model/login_params.dart';
 import 'package:carma_app/src/features/user_app/auth/data/model/login_result_model.dart';
+import 'package:carma_app/src/features/user_app/auth/data/model/logout_response.dart';
 import 'package:carma_app/src/features/user_app/auth/data/model/sign_up_params.dart';
 import 'package:carma_app/src/features/user_app/auth/data/model/signup_result_model.dart';
 import 'package:carma_app/src/features/user_app/auth/domain/entity/auth_result_entity.dart';
@@ -40,7 +41,7 @@ class AuthRepoImpl extends AuthRepository with RepositoryErrorHandler {
   }
 
   @override
-  Future<Either<Failure, void>> logout() async {
+  Future<Either<Failure, LogOutResponse>> logout() async {
     return callAction(() => _authDataSource.logOut());
   }
 
